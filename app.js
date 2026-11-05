@@ -10,6 +10,34 @@
   const ios = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   const standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
 
+  // Apps for one kind of alert, with the icon of that kind (the same icons as on Windows): an iPhone always shows
+  // the icon of the app in its notifications, so each icon needs its own app on the Home Screen.
+  const APPS = {
+    urgent: ['BT Urgent', '#dc2626', 'Very High and the other special alerts'],
+    answer: ['BT Answer', '#d97706', 'tickets that need your answer'],
+    reopened: ['BT Reopened', '#a21caf', 'reopened tickets and rejected solutions'],
+    kpi: ['BT KPI', '#ea580c', 'KPIs about to expire'],
+    new: ['BT New', '#2563eb', 'new tickets'],
+    call: ['BT Calls', '#0d9488', 'new calls'],
+    watch: ['BT Watched', '#7c3aed', 'changes of watched tickets'],
+    favorite: ['BT Favorites', '#ca8a04', 'changes of favorite tickets'],
+    reminder: ['BT Reminders', '#0891b2', 'your reminders']
+  };
+  const APP = Object.prototype.hasOwnProperty.call(APPS, params.get('g')) ? params.get('g') : '';
+  if (APP) {
+    const [name, color, what] = APPS[APP];
+    document.title = name;
+    $('manifest').href = `apps/${APP}.webmanifest`;
+    $('touchIcon').href = `apps/${APP}-180.png`;
+    $('favicon').href = `apps/${APP}-180.png`;
+    $('appTitle').content = name;
+    $('themeColor').content = color;
+    $('logo').src = `apps/${APP}-180.png`;
+    $('title').textContent = name;
+    $('sub').textContent = `Backlog Tool on this phone: ${what}`;
+    $('appName').textContent = name;
+  }
+
   const toBytes = s => {
     const b = s.replace(/-/g, '+').replace(/_/g, '/');
     return Uint8Array.from(atob(b + '='.repeat((4 - (b.length % 4)) % 4)), c => c.charCodeAt(0));
@@ -17,7 +45,7 @@
   const toB64url = bytes => btoa(String.fromCharCode(...new Uint8Array(bytes))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
   const codeOf = sub => {
     const j = sub.toJSON();
-    return `BT1.${toB64url(new TextEncoder().encode(JSON.stringify({ endpoint: j.endpoint, keys: j.keys })))}`;
+    return `BT1.${toB64url(new TextEncoder().encode(JSON.stringify({ endpoint: j.endpoint, keys: j.keys, g: APP || undefined })))}`;
   };
 
   function show(id) {
@@ -116,8 +144,10 @@
 
   $('test').addEventListener('click', async () => {
     const reg = await registration();
-    await reg.showNotification('Backlog Tool', { body: 'Notifications work on this phone.', icon: 'icon-192.png', tag: 'bt-local-test' });
-    $('readyInfo').textContent = 'A notification should be on the phone now. Alerts from the computer come the same way.';
+    await reg.showNotification(APP ? APPS[APP][0] : 'Backlog Tool', { body: 'Notifications work on this phone.', icon: APP ? `apps/${APP}-180.png` : 'icon-192.png', tag: 'bt-local-test' });
+    // The number on the icon of the Home Screen; it goes when the app is opened again.
+    const badge = navigator.setAppBadge ? await navigator.setAppBadge(1).then(() => true, () => false) : false;
+    $('readyInfo').textContent = `A notification should be on the phone now, with the icon of this app.${badge ? ' The icon on the Home Screen shows 1.' : ''} Alerts from the computer come the same way.`;
   });
 
   $('off').addEventListener('click', async () => {
@@ -130,6 +160,7 @@
   navigator.serviceWorker && navigator.serviceWorker.addEventListener('message', e => { if (e.data === 'pushed') renderLast(); });
 
   (async () => {
+    if (navigator.clearAppBadge) navigator.clearAppBadge().catch(() => {});
     if (!KEY) { show('nokey'); return; }
     if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) {
       show(ios && !standalone ? 'ios' : 'unsupported');

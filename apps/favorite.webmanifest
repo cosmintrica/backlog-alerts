@@ -1,0 +1,13 @@
+{
+  "name": "BT Favorites",
+  "short_name": "BT Favorites",
+  "description": "Backlog Tool alerts for changes of favorite tickets.",
+  "display": "standalone",
+  "scope": "../",
+  "background_color": "#ca8a04",
+  "theme_color": "#ca8a04",
+  "icons": [
+    { "src": "favorite-180.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "favorite-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

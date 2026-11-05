@@ -1,6 +1,8 @@
 'use strict';
 // Shows the alerts the computer pushes; the push service only carried them, encrypted for this phone.
 const SN = 'https://prysmiansd.service-now.com/';
+// The kinds of alert with an icon of their own (apps/<kind>-180.png), the same icons as on Windows.
+const KINDS = ['urgent', 'answer', 'reopened', 'kpi', 'new', 'call', 'watch', 'favorite', 'reminder'];
 
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', event => event.waitUntil(self.clients.claim()));
@@ -28,7 +30,9 @@ async function onPush(event) {
   // Only a page of the ServiceNow instance is opened from an alert.
   const url = typeof d.u === 'string' && d.u.startsWith(SN) ? d.u : '';
   const tag = typeof d.g === 'string' && d.g ? d.g.slice(0, 80) : '';
-  const options = { body, icon: 'icon-192.png', requireInteraction: !!d.r, vibrate: [300, 120, 300, 120, 600], data: { url } };
+  // Android shows this icon; an iPhone always shows the icon of the app.
+  const icon = KINDS.includes(d.a) ? `apps/${d.a}-180.png` : 'icon-192.png';
+  const options = { body, icon, requireInteraction: !!d.r, vibrate: [300, 120, 300, 120, 600], data: { url } };
   if (tag) Object.assign(options, { tag, renotify: true });
   let error = '';
   try {

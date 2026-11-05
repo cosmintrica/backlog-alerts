@@ -5,17 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
-<meta name="theme-color" content="#2f6bf0">
+<meta name="theme-color" content="#2f6bf0" id="themeColor">
+<meta name="apple-mobile-web-app-title" content="Backlog" id="appTitle">
 <title>Backlog Tool alerts</title>
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icon-192.png">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest" id="manifest">
+<link rel="icon" href="icon-192.png" id="favicon">
+<link rel="apple-touch-icon" href="apple-touch-icon.png" id="touchIcon">
 <link rel="stylesheet" href="style.css">
 <script src="app.js" defer></script>
 </head>
 <body>
 <main>
-  <header><img src="icon-192.png" alt="" width="44" height="44"><div><h1>Backlog Tool alerts</h1><p class="sub">The alerts of Backlog Tool on this phone</p></div></header>
+  <header><img src="icon-192.png" alt="" width="44" height="44" id="logo"><div><h1 id="title">Backlog Tool alerts</h1><p class="sub" id="sub">The alerts of Backlog Tool on this phone</p></div></header>
 
   <section data-step id="loading"><p>Checking this phone...</p></section>
 
@@ -29,7 +30,7 @@
     <ol>
       <li>Tap <b>Share</b> at the bottom of Safari.</li>
       <li>Tap <b>Add to Home Screen</b>, then <b>Add</b>.</li>
-      <li>Open <b>Backlog</b> from the Home Screen and continue there.</li>
+      <li>Open <b id="appName">Backlog</b> from the Home Screen and continue there.</li>
     </ol>
     <p class="hint">iPhone gets alerts from web apps only from the Home Screen (iOS 16.4 or newer).</p>
   </section>

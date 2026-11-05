@@ -1,0 +1,13 @@
+{
+  "name": "BT Urgent",
+  "short_name": "BT Urgent",
+  "description": "Very High and the other special alerts of Backlog Tool.",
+  "display": "standalone",
+  "scope": "../",
+  "background_color": "#dc2626",
+  "theme_color": "#dc2626",
+  "icons": [
+    { "src": "urgent-180.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "urgent-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

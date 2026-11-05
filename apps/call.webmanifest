@@ -1,0 +1,13 @@
+{
+  "name": "BT Calls",
+  "short_name": "BT Calls",
+  "description": "Backlog Tool alerts for new calls.",
+  "display": "standalone",
+  "scope": "../",
+  "background_color": "#0d9488",
+  "theme_color": "#0d9488",
+  "icons": [
+    { "src": "call-180.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "call-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

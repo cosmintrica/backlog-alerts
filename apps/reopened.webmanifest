@@ -1,0 +1,13 @@
+{
+  "name": "BT Reopened",
+  "short_name": "BT Reopened",
+  "description": "Backlog Tool alerts for reopened tickets and rejected solutions.",
+  "display": "standalone",
+  "scope": "../",
+  "background_color": "#a21caf",
+  "theme_color": "#a21caf",
+  "icons": [
+    { "src": "reopened-180.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "reopened-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

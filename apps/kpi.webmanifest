@@ -1,0 +1,13 @@
+{
+  "name": "BT KPI",
+  "short_name": "BT KPI",
+  "description": "Backlog Tool alerts for KPIs about to expire.",
+  "display": "standalone",
+  "scope": "../",
+  "background_color": "#ea580c",
+  "theme_color": "#ea580c",
+  "icons": [
+    { "src": "kpi-180.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "kpi-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "name": "BT Watched",
+  "short_name": "BT Watched",
+  "description": "Backlog Tool alerts for changes of watched tickets.",
+  "display": "standalone",
+  "scope": "../",
+  "background_color": "#7c3aed",
+  "theme_color": "#7c3aed",
+  "icons": [
+    { "src": "watch-180.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "watch-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

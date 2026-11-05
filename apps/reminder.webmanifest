@@ -1,0 +1,13 @@
+{
+  "name": "BT Reminders",
+  "short_name": "BT Reminders",
+  "description": "Backlog Tool alerts for the reminders you set.",
+  "display": "standalone",
+  "scope": "../",
+  "background_color": "#0891b2",
+  "theme_color": "#0891b2",
+  "icons": [
+    { "src": "reminder-180.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "reminder-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

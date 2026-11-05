@@ -1,0 +1,13 @@
+{
+  "name": "BT New",
+  "short_name": "BT New",
+  "description": "Backlog Tool alerts for new tickets.",
+  "display": "standalone",
+  "scope": "../",
+  "background_color": "#2563eb",
+  "theme_color": "#2563eb",
+  "icons": [
+    { "src": "new-180.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "new-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

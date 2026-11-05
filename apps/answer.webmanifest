@@ -1,0 +1,13 @@
+{
+  "name": "BT Answer",
+  "short_name": "BT Answer",
+  "description": "Backlog Tool alerts for the tickets that need your answer.",
+  "display": "standalone",
+  "scope": "../",
+  "background_color": "#d97706",
+  "theme_color": "#d97706",
+  "icons": [
+    { "src": "answer-180.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "answer-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
