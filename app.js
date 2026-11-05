@@ -24,27 +24,40 @@
     for (const s of document.querySelectorAll('[data-step]')) s.hidden = s.id !== id;
   }
 
+  const when = at => new Date(at).toLocaleString([], { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+
+  // A short ID of the push address; Backlog Tool shows the same ID next to the phone, so the two can be compared.
+  async function idOf(endpoint) {
+    const hash = new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(endpoint)));
+    return Array.from(hash.slice(-3), b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
+  }
+
   async function registration() {
     await navigator.serviceWorker.register('sw.js');
     return navigator.serviceWorker.ready;
   }
 
-  // A subscription made for another computer (another key) is replaced.
+  // The key a subscription was made with; '' when the browser does not say it in the usual form (then it is kept).
+  const keyOf = sub => {
+    const k = sub && sub.options && sub.options.applicationServerKey;
+    return k && k.byteLength === 65 ? toB64url(k) : '';
+  };
+
+  // The subscription of this phone, and whether it was made for this computer (the key in the link). It is never
+  // dropped here: only Turn on (for another computer) and Turn off do that.
   async function current() {
     const reg = await navigator.serviceWorker.getRegistration();
     const sub = reg ? await reg.pushManager.getSubscription() : null;
-    if (sub && sub.options && sub.options.applicationServerKey && toB64url(sub.options.applicationServerKey) !== KEY) {
-      await sub.unsubscribe();
-      return null;
-    }
-    return sub;
+    return { sub, mine: !!sub && (keyOf(sub) || KEY) === KEY };
   }
 
   async function renderLast() {
     const list = $('last');
     const cache = await caches.open('bt-alerts');
-    const hit = await cache.match('last');
+    const [hit, st] = await Promise.all([cache.match('last'), cache.match('status')]);
     const items = hit ? await hit.json() : [];
+    const status = st ? await st.json() : null;
+    $('received').textContent = status ? `Last alert received ${when(status.at)}${status.error ? ` (shown without its options: ${status.error})` : ''}.` : 'No alert has reached this phone yet.';
     if (!items.length) return;
     list.textContent = '';
     for (const it of items) {
@@ -54,17 +67,18 @@
       if (it.u) { title.href = it.u; title.target = '_blank'; title.rel = 'noopener'; }
       const body = document.createElement('div');
       body.textContent = it.b;
-      const when = document.createElement('div');
-      when.className = 'when';
-      when.textContent = new Date(it.at).toLocaleString([], { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
-      li.append(title, body, when);
+      const at = document.createElement('div');
+      at.className = 'when';
+      at.textContent = when(it.at);
+      li.append(title, body, at);
       list.append(li);
     }
   }
 
-  function showCode(sub) {
+  async function showCode(sub) {
     $('code').value = codeOf(sub);
     show('ready');
+    $('phoneId').textContent = `Phone ID ${await idOf(sub.endpoint)}: Backlog Tool settings - Phone shows the same ID next to this phone when it is paired.`;
     renderLast();
   }
 
@@ -74,8 +88,13 @@
       const permission = await Notification.requestPermission();
       if (permission !== 'granted') { show('blocked'); return; }
       const reg = await registration();
-      const sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: toBytes(KEY) });
-      showCode(sub);
+      let sub = await reg.pushManager.getSubscription();
+      // A subscription keeps the key it was made with: one made for another computer is replaced.
+      if (sub && keyOf(sub) && keyOf(sub) !== KEY) { await sub.unsubscribe(); sub = null; }
+      const fresh = !sub;
+      if (!sub) sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: toBytes(KEY) });
+      await showCode(sub);
+      if (fresh) $('readyInfo').textContent = 'This is a new code: paste it in Backlog Tool settings - Phone. A code shown before no longer works.';
     } catch (e) {
       $('startError').textContent = `It did not work: ${e && e.message ? e.message : e}`;
     }
@@ -102,9 +121,10 @@
   });
 
   $('off').addEventListener('click', async () => {
-    const sub = await current();
+    const { sub } = await current();
     if (sub) await sub.unsubscribe();
     show('start');
+    $('startError').textContent = 'Alerts are off on this phone. Turning them on again makes a new code for the computer.';
   });
 
   navigator.serviceWorker && navigator.serviceWorker.addEventListener('message', e => { if (e.data === 'pushed') renderLast(); });
@@ -116,8 +136,9 @@
       return;
     }
     if (Notification.permission === 'denied') { show('blocked'); return; }
-    const sub = Notification.permission === 'granted' ? await current() : null;
-    if (sub) showCode(sub);
-    else show('start');
+    const { sub, mine } = Notification.permission === 'granted' ? await current() : { sub: null, mine: false };
+    if (sub && mine) { await showCode(sub); return; }
+    show('start');
+    if (sub) $('startError').textContent = 'This phone gets the alerts of another computer. Turn on alerts to get the ones of this computer instead.';
   })().catch(e => { show('start'); $('startError').textContent = String(e && e.message ? e.message : e); });
 })();
