@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#2f6bf0">
+<title>Backlog Tool alerts</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="stylesheet" href="style.css">
+<script src="app.js" defer></script>
+</head>
+<body>
+<main>
+  <header><img src="icon-192.png" alt="" width="44" height="44"><div><h1>Backlog Tool alerts</h1><p class="sub">The alerts of Backlog Tool on this phone</p></div></header>
+
+  <section data-step id="loading"><p>Checking this phone...</p></section>
+
+  <section data-step id="nokey" hidden>
+    <h2>Open the link from Backlog Tool</h2>
+    <p>On the computer: Backlog Tool settings - Phone - Copy the link, send it to yourself and open it here.</p>
+  </section>
+
+  <section data-step id="ios" hidden>
+    <h2>First add it to the Home Screen</h2>
+    <ol>
+      <li>Tap <b>Share</b> at the bottom of Safari.</li>
+      <li>Tap <b>Add to Home Screen</b>, then <b>Add</b>.</li>
+      <li>Open <b>Backlog</b> from the Home Screen and continue there.</li>
+    </ol>
+    <p class="hint">iPhone gets alerts from web apps only from the Home Screen (iOS 16.4 or newer).</p>
+  </section>
+
+  <section data-step id="unsupported" hidden>
+    <h2>This browser cannot receive alerts</h2>
+    <p>On Android open this link in Chrome. On iPhone use Safari and add it to the Home Screen.</p>
+  </section>
+
+  <section data-step id="start" hidden>
+    <h2>Turn on the alerts</h2>
+    <p>Allow notifications when the phone asks. Only this phone can read the alerts: they are encrypted on the computer.</p>
+    <button id="on" type="button" class="primary">Turn on alerts</button>
+    <p class="hint" id="startError"></p>
+  </section>
+
+  <section data-step id="blocked" hidden>
+    <h2>Notifications are blocked</h2>
+    <p>Allow notifications for this page in the settings of the phone (Android: Chrome - Site settings - Notifications; iPhone: Settings - Notifications - Backlog), then reload it.</p>
+  </section>
+
+  <section data-step id="ready" hidden>
+    <h2>Last step: the code for the computer</h2>
+    <p>Send this code to the computer (Share to Teams or e-mail to yourself), then paste it in Backlog Tool settings - Phone - Paste the code here.</p>
+    <textarea id="code" rows="5" readonly spellcheck="false"></textarea>
+    <div class="row"><button id="share" type="button" class="primary">Share the code</button><button id="copy" type="button">Copy</button></div>
+    <div class="row"><button id="test" type="button">Test on this phone</button><button id="off" type="button" class="quiet">Turn off</button></div>
+    <p class="hint" id="readyInfo"></p>
+    <h2 class="last-title">Last alerts</h2>
+    <ul id="last"><li class="hint">None yet.</li></ul>
+  </section>
+</main>
+</body>
+</html>

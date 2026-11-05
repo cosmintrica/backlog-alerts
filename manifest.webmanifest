@@ -1,0 +1,13 @@
+{
+  "name": "Backlog Tool alerts",
+  "short_name": "Backlog",
+  "description": "The alerts of Backlog Tool on this phone.",
+  "display": "standalone",
+  "scope": "./",
+  "background_color": "#0e0f12",
+  "theme_color": "#2f6bf0",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
